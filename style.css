@@ -1,0 +1,221 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: #fff;
+  color: #000;
+  font-family: "Poppins", "Segoe UI", system-ui, Arial, sans-serif;
+}
+
+/* thin navy line at the top and bottom edge of the page */
+.frame {
+  min-height: 100vh;
+  border-top: 3px solid #082b40;
+  border-bottom: 3px solid #082b40;
+}
+
+.game {
+  height: calc(100vh - 6px);
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 clamp(12px, 2.3vw, 46px);
+}
+
+/* title sits at the top right */
+header {
+  flex: none;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 25px 0 0;
+}
+h1 {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(20px, 2.1vw, 40px);
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+  color: #000;
+  text-align: right;
+}
+
+/* progress bar */
+.bar {
+  flex: none;
+  height: 18px;
+  background: #e0e0e0;
+}
+.bar > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #636363;
+  transition: width 0.35s ease;
+}
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: clamp(20px, 6.8vh, 66px);
+}
+
+/* ---------- dot sequence screen ---------- */
+.arena {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #e0e0e0;
+  overflow: hidden;
+}
+.dot {
+  position: absolute;
+  width: var(--d, 64px);
+  height: var(--d, 64px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #adadb8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  cursor: default;
+  outline: none;
+}
+.arena.clickable .dot { cursor: pointer; }
+.dot.lit { background: #008000; }
+.dot.right { background: #008000; }
+.dot.wrong { background: #d32f2f; }
+.dot.missed { outline: 4px dashed #008000; outline-offset: 3px; }
+
+/* ---------- gray panel screens ---------- */
+.panel {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: clamp(16px, 4.5vh, 44px) clamp(16px, 6vw, 115px) 0;
+  background: #ececec;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 6vh, 64px);
+  padding: 20px;
+  text-align: center;
+}
+.q {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(18px, 2.1vw, 40px);
+  color: #555;
+}
+.sub {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(14px, 1.3vw, 24px);
+  color: #666;
+}
+
+/* symmetry figures: squares and small dots on white */
+.pats {
+  display: flex;
+  gap: clamp(14px, 1.6vw, 30px);
+}
+.pat {
+  width: clamp(140px, 14.3vw, 270px);
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  padding: 1.5%;
+  display: grid;
+  grid-template-columns: repeat(var(--n, 5), 1fr);
+  grid-template-rows: repeat(var(--n, 5), 1fr);
+}
+.pat > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pat > .sq::after {
+  content: "";
+  width: 55%;
+  aspect-ratio: 1 / 1;
+  background: #444;
+}
+.pat > .tiny::after {
+  content: "";
+  width: 14%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: #333;
+}
+
+/* navy yes / no buttons */
+.answers {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  gap: clamp(24px, 3.4vw, 64px);
+  margin-top: clamp(16px, 5.8vh, 57px);
+}
+.ans {
+  width: clamp(130px, 15.7vw, 298px);
+  height: clamp(56px, 6.9vw, 130px);
+  border: 0;
+  border-radius: 18px;
+  background: #032a42;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: clamp(20px, 2.3vw, 44px);
+  cursor: pointer;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.35);
+  transition: background 0.15s, transform 0.05s;
+}
+.ans:hover { background: #0a3d5c; }
+.ans:active { transform: scale(0.98); }
+
+/* intro and result text */
+.rules {
+  margin: 0;
+  padding-left: 1.2em;
+  max-width: 900px;
+  text-align: left;
+  font-weight: 500;
+  font-size: clamp(14px, 1.35vw, 24px);
+  line-height: 1.7;
+  color: #444;
+}
+.stats {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px clamp(24px, 4vw, 70px);
+  font-weight: 500;
+  font-size: clamp(16px, 1.6vw, 30px);
+  color: #444;
+  text-align: left;
+}
+.stats b { font-weight: 700; text-align: right; color: #032a42; }
+
+/* per-question countdown and Correct / Incorrect message */
+.clock {
+  position: absolute;
+  top: clamp(10px, 2vh, 22px);
+  right: clamp(14px, 2vw, 34px);
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 38px);
+  color: #032a42;
+  font-variant-numeric: tabular-nums;
+}
+.clock.low { color: #c62828; }
+.verdict {
+  margin: 0;
+  min-height: 1.5em;
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 38px);
+}
+.verdict.ok { color: #1b7f3b; }
+.verdict.bad { color: #c62828; }
+.ans:disabled { opacity: 0.6; cursor: default; }
+.ans:disabled:hover { background: #032a42; }
